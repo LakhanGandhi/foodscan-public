@@ -1,4 +1,5 @@
 import { useBatchLookup } from './hooks/useBatchLookup.js'
+import StatusBanner from './components/StatusBanner.jsx'
 
 function App() {
   const { batchId, status, data, errorMessage } = useBatchLookup()
@@ -42,7 +43,8 @@ function App() {
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
       <h1>FoodCheck</h1>
-      <p>Data loaded for {batchId} — full display layout comes next.</p>
+      <StatusBanner recalled={data.batch?.recalled} expiryStatus={data.batch?.expiryStatus} />
+      <p>Rest of the layout (product/batch/plant/company) comes next.</p>
       <pre style={{ background: '#f4f4f4', padding: '1rem', overflowX: 'auto' }}>
         {JSON.stringify(data, null, 2)}
       </pre>
