@@ -1,12 +1,23 @@
 import { useBatchLookup } from './hooks/useBatchLookup.js'
 import StatusBanner from './components/StatusBanner.jsx'
+import ProductInfo from './components/ProductInfo.jsx'
+import BatchInfo from './components/BatchInfo.jsx'
+import PlantInfo from './components/PlantInfo.jsx'
+import CompanyInfo from './components/CompanyInfo.jsx'
+
+const PAGE_STYLE = {
+  padding: '1.5rem',
+  fontFamily: 'sans-serif',
+  maxWidth: '640px',
+  margin: '0 auto',
+}
 
 function App() {
   const { batchId, status, data, errorMessage } = useBatchLookup()
 
   if (status === 'missing_id') {
     return (
-      <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+      <div style={PAGE_STYLE}>
         <h1>FoodCheck</h1>
         <p>No product code found in this link. Please rescan the QR code on the package.</p>
       </div>
@@ -15,7 +26,7 @@ function App() {
 
   if (status === 'loading') {
     return (
-      <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+      <div style={PAGE_STYLE}>
         <p>Loading product info…</p>
       </div>
     )
@@ -23,7 +34,7 @@ function App() {
 
   if (status === 'not_found') {
     return (
-      <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+      <div style={PAGE_STYLE}>
         <h1>FoodCheck</h1>
         <p>We couldn't find a product for code "{batchId}". It may be invalid or removed.</p>
       </div>
@@ -32,7 +43,7 @@ function App() {
 
   if (status === 'error') {
     return (
-      <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+      <div style={PAGE_STYLE}>
         <h1>FoodCheck</h1>
         <p>Something went wrong loading this product{errorMessage ? `: ${errorMessage}` : '.'}</p>
       </div>
@@ -41,13 +52,12 @@ function App() {
 
   // status === 'success'
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1>FoodCheck</h1>
+    <div style={PAGE_STYLE}>
       <StatusBanner recalled={data.batch?.recalled} expiryStatus={data.batch?.expiryStatus} />
-      <p>Rest of the layout (product/batch/plant/company) comes next.</p>
-      <pre style={{ background: '#f4f4f4', padding: '1rem', overflowX: 'auto' }}>
-        {JSON.stringify(data, null, 2)}
-      </pre>
+      <ProductInfo product={data} />
+      <BatchInfo batch={data.batch} />
+      <PlantInfo plant={data.plant} />
+      <CompanyInfo company={data.company} />
     </div>
   )
 }
