@@ -1,0 +1,52 @@
+:root {
+  /* Color */
+  --ink: #1B2A4A;
+  --paper: #F3F4F1;
+  --card: #FFFFFF;
+  --teal: #0F6B5C;
+  --brass: #B08D57;
+  --muted: #5B6472;
+  --hairline: #DADDD6;
+
+  /* Status colors (semantic, not brand — used for expiry + recall only) */
+  --safe-bg: #E6F4EA; --safe-fg: #1E7E34; --safe-border: #1E7E34;
+  --warn-bg: #FFF8E1; --warn-fg: #9A6B00; --warn-border: #9A6B00;
+  --danger-bg: #FDECEA; --danger-fg: #C62828; --danger-border: #C62828;
+
+  /* Type */
+  --font-display: 'Fraunces', 'Georgia', serif;
+  --font-body: 'IBM Plex Sans', -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  /* Layout */
+  --radius: 4px;
+  --page-max-width: 640px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: var(--teal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

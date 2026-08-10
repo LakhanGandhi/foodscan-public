@@ -1,0 +1,36 @@
+.seal {
+  --seal-color: var(--teal);
+  width: 60px;
+  height: 60px;
+  min-width: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--seal-color);
+  color: var(--seal-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transform: rotate(-6deg);
+}
+
+.seal::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid var(--seal-color);
+  border-radius: 50%;
+}
+
+.seal--safe { --seal-color: var(--teal); }
+.seal--warn { --seal-color: var(--warn-fg); }
+.seal--danger { --seal-color: var(--danger-fg); }
+
+.seal-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: center;
+  line-height: 1.15;
+}

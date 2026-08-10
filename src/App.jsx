@@ -5,11 +5,23 @@ import BatchInfo from './components/BatchInfo.jsx'
 import PlantInfo from './components/PlantInfo.jsx'
 import CompanyInfo from './components/CompanyInfo.jsx'
 
-const PAGE_STYLE = {
-  padding: '1.5rem',
-  fontFamily: 'sans-serif',
-  maxWidth: '640px',
-  margin: '0 auto',
+function Header() {
+  return (
+    <div className="passport-header">
+      <div>
+        <p className="passport-wordmark">FoodCheck</p>
+        <p className="passport-tagline">Digital Product Passport</p>
+      </div>
+    </div>
+  )
+}
+
+function Shell({ children }) {
+  return (
+    <div className="passport-page">
+      <div className="passport-card">{children}</div>
+    </div>
+  )
 }
 
 function App() {
@@ -17,48 +29,53 @@ function App() {
 
   if (status === 'missing_id') {
     return (
-      <div style={PAGE_STYLE}>
-        <h1>FoodCheck</h1>
+      <Shell>
+        <Header />
         <p>No product code found in this link. Please rescan the QR code on the package.</p>
-      </div>
+      </Shell>
     )
   }
 
   if (status === 'loading') {
     return (
-      <div style={PAGE_STYLE}>
-        <p>Loading product info…</p>
-      </div>
+      <Shell>
+        <Header />
+        <p style={{ color: 'var(--muted)' }}>Loading product info…</p>
+      </Shell>
     )
   }
 
   if (status === 'not_found') {
     return (
-      <div style={PAGE_STYLE}>
-        <h1>FoodCheck</h1>
-        <p>We couldn't find a product for code "{batchId}". It may be invalid or removed.</p>
-      </div>
+      <Shell>
+        <Header />
+        <p>We couldn't find a product for code <span className="mrz-strip" style={{ display: 'inline-block', margin: '0.5rem 0' }}>{batchId}</span></p>
+        <p style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>It may be invalid, or the product has been removed.</p>
+      </Shell>
     )
   }
 
   if (status === 'error') {
     return (
-      <div style={PAGE_STYLE}>
-        <h1>FoodCheck</h1>
+      <Shell>
+        <Header />
         <p>Something went wrong loading this product{errorMessage ? `: ${errorMessage}` : '.'}</p>
-      </div>
+      </Shell>
     )
   }
 
   // status === 'success'
   return (
-    <div style={PAGE_STYLE}>
+    <Shell>
+      <Header />
       <StatusBanner recalled={data.batch?.recalled} expiryStatus={data.batch?.expiryStatus} />
+      <hr className="section-divider" />
       <ProductInfo product={data} />
+      <hr className="section-divider" />
       <BatchInfo batch={data.batch} />
       <PlantInfo plant={data.plant} />
       <CompanyInfo company={data.company} />
-    </div>
+    </Shell>
   )
 }
 

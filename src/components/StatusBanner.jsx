@@ -1,56 +1,56 @@
-const EXPIRY_STYLES = {
-  safe: { background: '#e6f4ea', color: '#1e7e34', border: '#1e7e34' },
-  near_expiry: { background: '#fff8e1', color: '#9a6b00', border: '#9a6b00' },
-  expired: { background: '#fdecea', color: '#c62828', border: '#c62828' },
+const SEAL_TEXT = {
+  safe: ['SAFE', 'TO', 'CONSUME'],
+  near_expiry: ['NEAR', 'EXPIRY'],
+  expired: ['EXPIRED'],
+}
+
+const SEAL_CLASS = {
+  safe: 'seal seal--safe',
+  near_expiry: 'seal seal--warn',
+  expired: 'seal seal--danger',
 }
 
 /**
- * Shows the recall warning (if recalled) and the expiry status badge.
- * Recall takes visual priority — it's rendered first and styled most aggressively,
- * since it's a safety-critical flag.
+ * Recall warning + verification seal. The seal is the page's signature
+ * element — it doubles as the expiry-status indicator, color-coded to match.
+ * Recall renders separately, above everything, since it's the highest-priority signal.
  */
 function StatusBanner({ recalled, expiryStatus }) {
-  const expiryStyle = EXPIRY_STYLES[expiryStatus?.key] || EXPIRY_STYLES.safe
+  const key = expiryStatus?.key || 'safe'
+  const lines = SEAL_TEXT[key] || [expiryStatus?.label || '—']
 
   return (
-    <div style={{ marginBottom: '1.5rem' }}>
+    <div className="section" style={{ marginBottom: recalled ? '1.25rem' : '1.75rem' }}>
       {recalled && (
-        <div
-          role="alert"
-          style={{
-            background: '#c62828',
-            color: '#fff',
-            padding: '1rem 1.25rem',
-            borderRadius: '6px',
-            marginBottom: '0.75rem',
-            fontWeight: 700,
-            fontSize: '1.05rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-          }}
-        >
-          <span aria-hidden="true">⚠️</span>
-          <span>This batch has been RECALLED. Do not consume this product.</span>
+        <div className="recall-banner" role="alert">
+          <span aria-hidden="true">⚠</span>
+          <span>This batch has been recalled. Do not consume this product.</span>
         </div>
       )}
 
-      {expiryStatus && (
-        <div
-          style={{
-            display: 'inline-block',
-            background: expiryStyle.background,
-            color: expiryStyle.color,
-            border: `1px solid ${expiryStyle.border}`,
-            padding: '0.4rem 0.9rem',
-            borderRadius: '999px',
-            fontWeight: 600,
-            fontSize: '0.9rem',
-          }}
-        >
-          {expiryStatus.label}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem' }}>
+        <div className={SEAL_CLASS[key] || 'seal seal--safe'} aria-hidden="true">
+          <span className="seal-text">
+            {lines.map((line, i) => (
+              <span key={i}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </span>
         </div>
-      )}
+        <div>
+          <p className="field-label" style={{ marginBottom: '0.15rem' }}>Status</p>
+          <p style={{ margin: 0, fontWeight: 600 }}>
+            {expiryStatus?.label || 'Unknown'}
+            {typeof expiryStatus?.daysLeft === 'number' && key !== 'expired' && (
+              <span style={{ color: 'var(--muted)', fontWeight: 400 }}>
+                {' '}· {expiryStatus.daysLeft} day{expiryStatus.daysLeft === 1 ? '' : 's'} left
+              </span>
+            )}
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
